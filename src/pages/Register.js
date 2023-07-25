@@ -1,7 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import { registerUser } from "../redux/apiRequest";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -20,7 +25,6 @@ const Register = () => {
     };
 
     const handleFormSubmit = async (e) => {
-        console.log(username, email, password);
         e.preventDefault();
 
         const user = {
@@ -28,8 +32,20 @@ const Register = () => {
             "email": email,
             "password": password,
             "roles": ["user"]
-        }
-        const response = await axios.post('http://localhost:8000/api/sign-up', user);
+        };
+
+        registerUser(user, dispatch, navigate);
+
+        // console.log(username, email, password);
+        // e.preventDefault();
+
+        // const user = {
+        //     "username": username,
+        //     "email": email,
+        //     "password": password,
+        //     "roles": ["user"]
+        // }
+        // const response = await axios.post('http://localhost:8000/api/sign-up', user);
     }
 
     return (

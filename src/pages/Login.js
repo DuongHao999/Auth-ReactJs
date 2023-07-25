@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { loginUser } from "../redux/apiRequest";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -17,24 +20,29 @@ const Login = () => {
     };
 
     const handleFormSubmit = async (e) => {
-        try {
-            e.preventDefault();
-            e.stopPropagation(); // Add this line to stop event propagation
-            console.log("goi may lan");
+        e.preventDefault();
+        const user = {
+            "username": username,
+            "password": password
+        };
 
-            const user = {
-                "username": username,
-                "password": password
-            }
-            const response = await axios.post('http://localhost:8000/api/login', user);
-            console.log(response);
-            navigate("/");
-        } catch (err) {
-            // khi gọi api trả về status khác 200 thì axios nó sẽ chạy vào catch này, không bao giờ vào else nếu có
-            console.log("Error Response:", err.response.data);
-            navigate("/");
-        }
+        loginUser(user, dispatch, navigate);
 
+        // try {
+        //     e.preventDefault();
+        //     e.stopPropagation(); // Add this line to stop event propagation
+        //     const user = {
+        //         "username": username,
+        //         "password": password
+        //     }
+        //     // const response = await axios.post('http://localhost:8000/api/login', user);
+        //     // console.log(response);
+        //     // navigate("/");
+        // } catch (err) {
+        //     // khi gọi api trả về status khác 200 thì axios nó sẽ chạy vào catch này, không bao giờ vào else nếu có
+        //     console.log("Error Response:", err.response.data);
+        //     navigate("/");
+        // }
     }
 
     return (
